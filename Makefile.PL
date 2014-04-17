@@ -30,8 +30,7 @@ my %WriteMakefileArgs = (
     "Perinci::Result::Util" => 0,
     "Text::CSV_XS" => 0,
     "Text::LTSV" => 0,
-    "YAML::XS" => 0,
-    "experimental" => 0
+    "YAML::XS" => 0
   },
   "TEST_REQUIRES" => {
     "File::Spec" => 0,
@@ -39,7 +38,7 @@ my %WriteMakefileArgs = (
     "IPC::Open3" => 0,
     "Test::More" => 0
   },
-  "VERSION" => "0.01",
+  "VERSION" => "0.02",
   "test" => {
     "TESTS" => "t/*.t"
   }
@@ -58,8 +57,7 @@ my %FallbackPrereqs = (
   "Test::More" => 0,
   "Text::CSV_XS" => 0,
   "Text::LTSV" => 0,
-  "YAML::XS" => 0,
-  "experimental" => 0
+  "YAML::XS" => 0
 );
 
 
