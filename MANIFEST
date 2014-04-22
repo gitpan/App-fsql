@@ -10,6 +10,11 @@ bin/fsql
 dist.ini
 lib/App/fsql.pm
 t/00-compile.t
+t/data/1.csv
+t/data/1.json
+t/data/1.ltsv
+t/data/1.tsv
+t/data/1.yaml
 t/release-pod-coverage.t
 t/release-pod-syntax.t
 t/release-rinci.t

@@ -8,7 +8,7 @@ use warnings;
 use Getopt::Long;
 use Text::CSV_XS qw(csv);
 
-our $VERSION = '0.03'; # VERSION
+our $VERSION = '0.04'; # VERSION
 our $DATE = '2014-04-22'; # DATE
 
 my %Opts = (
@@ -96,7 +96,11 @@ sub _add_csv {
         $outfilename = $filename;
     }
 
-    $Tables{$tablename} = {orig_file=>$filename, f_file=>$outfilename};
+    $Tables{$tablename} = {
+        file      => $outfilename,
+        orig_file => $filename,
+        fmt       => 'csv',
+    };
 }
 
 sub _add_tsv {
@@ -111,7 +115,11 @@ sub _add_tsv {
     my $aoa = csv(in => $filename, sep_char=>"\t");
     my $outfilename = "$tempdir/$tablename";
     csv(in => $aoa, out=>"$tempdir/$tablename");
-    $Tables{$tablename} = {orig_file=>$filename, f_file=>$outfilename};
+    $Tables{$tablename} = {
+        file      => $outfilename,
+        orig_file => $filename,
+        fmt       => 'tsv',
+    };
 }
 
 sub _add_ltsv {
@@ -126,13 +134,17 @@ sub _add_ltsv {
     my $aoh  = $ltsv->parse_file($fh);
     my $outfilename = "$tempdir/$tablename";
     csv(in => $aoh, out => $outfilename);
-    $Tables{$tablename} = {orig_file=>$filename, f_file=>$outfilename};
+    $Tables{$tablename} = {
+        file      => $outfilename,
+        orig_file => $filename,
+        fmt       => 'ltsv',
+    };
 }
 
 sub _res_to_csv {
     require Perinci::Result::Util;
 
-    my ($res, $filename, $tablename) = @_;
+    my ($res, $filename, $tablename, $fmt) = @_;
     my $tf;
     if (Perinci::Result::Util::is_env_res($res)) {
         $tf = $res->[3]{"table.fields"}
@@ -172,7 +184,11 @@ sub _res_to_csv {
     csv(in=>$res, headers=>$tf, out=>$outfilename);
 
   END:
-    $Tables{$tablename} = {orig_file=>$filename, f_file=>$outfilename};
+    $Tables{$tablename} = {
+        file      => $outfilename,
+        orig_file => $filename,
+        fmt       => $fmt,
+    };
 }
 
 sub _add_json {
@@ -188,7 +204,7 @@ sub _add_json {
         my $content = <$fh>;
         $res = $json->decode($content);
     }
-    _res_to_csv($res, $filename, $tablename);
+    _res_to_csv($res, $filename, $tablename, 'json');
 }
 
 sub _add_yaml {
@@ -206,7 +222,7 @@ sub _add_yaml {
     } else {
         $res = YAML::XS::LoadFile($filename);
     }
-    _res_to_csv($res, $filename, $tablename);
+    _res_to_csv($res, $filename, $tablename, 'yaml');
 }
 
 sub parse_cmdline {
@@ -263,21 +279,13 @@ sub run {
 
         my $tt = {};
         for my $t (sort keys %Tables) {
-            my $file = $Tables{$t}{f_file};
-            my $orig_file = $Tables{$t}{orig_file};
-            open my($fh), "<", $file
-                or die "fsql: Can't open $file: $!\n";
+            open my($fh), "<", $Tables{$t}{file}
+                or die "fsql: Can't open $Tables{$t}{file}: $!\n";
             my $line1 = <$fh>;
             $line1 =~ s/\r?\n//;
-            my $columns = [split /,/, $line1];
-            $tt->{$t} = {
-                file => $file,
-                ( orig_file => $orig_file ) x
-                    ($orig_file eq $file ? 0:1),
-                columns => $columns,
-            };
+            $Tables{$t}{columns} = [split /,/, $line1];
         }
-        $res = [200, "OK", {tables => $tt}];
+        $res = [200, "OK", {tables => \%Tables}];
 
     } elsif ($Opts{action} eq 'query') {
         unless (@ARGV) {
@@ -296,7 +304,10 @@ sub run {
             "dbi:CSV:", undef, undef,
             {
                 RaiseError => 1,
-                csv_tables => \%Tables,
+                csv_tables => {
+                    map { $_=>{f_file=>$Tables{$_}{file}} }
+                        keys %Tables,
+                },
             });
         my $sth = $dbh->prepare($query);
         $sth->execute;
@@ -336,7 +347,7 @@ fsql - Perform SQL queries against files in CSV/TSV/LTSV/JSON/YAML formats
 
 =head1 VERSION
 
-version 0.03
+version 0.04
 
 =head1 SYNOPSIS
 
