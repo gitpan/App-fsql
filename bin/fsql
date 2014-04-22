@@ -8,8 +8,8 @@ use warnings;
 use Getopt::Long;
 use Text::CSV_XS qw(csv);
 
-our $VERSION = '0.02'; # VERSION
-our $DATE = '2014-04-17'; # DATE
+our $VERSION = '0.03'; # VERSION
+our $DATE = '2014-04-22'; # DATE
 
 my %Opts = (
     format => 'text',
@@ -109,8 +109,9 @@ sub _add_tsv {
 
     my $outfile;
     my $aoa = csv(in => $filename, sep_char=>"\t");
+    my $outfilename = "$tempdir/$tablename";
     csv(in => $aoa, out=>"$tempdir/$tablename");
-    $Tables{$tablename} = {orig_file=>$filename, f_file=>$filename};
+    $Tables{$tablename} = {orig_file=>$filename, f_file=>$outfilename};
 }
 
 sub _add_ltsv {
@@ -231,7 +232,7 @@ Options:
   --add-ltsv=s
   --add-json=s
   --add-yaml=s
-  --format=s
+  --format=s, --json, --yaml
 For more details, see the manpage/documentation.
 USAGE
             exit 0;
@@ -335,7 +336,7 @@ fsql - Perform SQL queries against files in CSV/TSV/LTSV/JSON/YAML formats
 
 =head1 VERSION
 
-version 0.02
+version 0.03
 
 =head1 SYNOPSIS
 
@@ -349,7 +350,8 @@ L<DBD::CSV> and L<SQL::Statement>.
 
 There must be at least one table specified (either with C<--add-csv>,
 C<--add-tsv>, C<--add-ltsv>, C<--add-json>, C<--add-yaml>). If none of those
-options are specified, a JSON table is assumed in STDIN.
+options are specified, a JSON table is assumed in STDIN and table name C<stdin>
+(if you want to change the table name, you can use C<--add-json -:somename>.
 
 =head1 OPTIONS
 
@@ -398,6 +400,10 @@ Equivalent to C<--format json>.
 
 Equivalent to C<--format yaml>.
 
+=item * --show-schema
+
+Instead of running a query, show schema instead. This is useful for debugging.
+
 =back
 
 =head1 EXIT CODES
@@ -413,10 +419,6 @@ Equivalent to C<--format yaml>.
 =head1 TODO
 
 Allow customized CSV separator and quoting.
-
-=head1 SEE ALSO
-
-L<uniq>
 
 =head1 HOMEPAGE
 

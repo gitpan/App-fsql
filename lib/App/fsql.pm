@@ -1,7 +1,7 @@
 package App::fsql;
 
-our $VERSION = '0.02'; # VERSION
-our $DATE = '2014-04-17'; # DATE
+our $VERSION = '0.03'; # VERSION
+our $DATE = '2014-04-22'; # DATE
 
 1;
 # ABSTRACT: Perform SQL queries against files in CSV/TSV/LTSV/JSON/YAML formats
@@ -18,7 +18,7 @@ App::fsql - Perform SQL queries against files in CSV/TSV/LTSV/JSON/YAML formats
 
 =head1 VERSION
 
-version 0.02
+version 0.03
 
 =head1 SYNOPSIS
 
