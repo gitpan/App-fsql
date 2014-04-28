@@ -31,6 +31,7 @@
          "requires" : {
             "DBD::CSV" : "0",
             "DBI" : "0",
+            "Data::Format::Pretty::Perl" : "0",
             "JSON" : "0",
             "Perinci::Result::Format" : "0",
             "Perinci::Result::Util" : "0",
@@ -61,7 +62,7 @@
          "web" : "https://github.com/sharyanto/perl-App-fsql"
       }
    },
-   "version" : "0.04",
+   "version" : "0.05",
    "x_Dist_Zilla" : {
       "perl" : {
          "version" : "5.018002"

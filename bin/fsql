@@ -8,11 +8,11 @@ use warnings;
 use Getopt::Long;
 use Text::CSV_XS qw(csv);
 
-our $VERSION = '0.04'; # VERSION
-our $DATE = '2014-04-22'; # DATE
+our $VERSION = '0.05'; # VERSION
+our $DATE = '2014-04-29'; # DATE
 
 my %Opts = (
-    format => 'text',
+    format => undef,
     action => 'query',
 );
 my %Tables;
@@ -53,13 +53,14 @@ sub _check_add_arg {
     } else {
         $filename  = $arg;
         $tablename = $filename;
-        $tablename =~ s!.+/!!; # strip path
+        $tablename =~ s!.+[/\\]!!; # strip path
         $tablename =~ s!\.\w+\z!!; # strip filename extension
         $tablename =~ s/[^A-Za-z_0-9]+/_/g;
     }
 
     unless ($tablename =~ /\A[A-Za-z_][A-Za-z_0-9]*\z/) {
-        warn "fsql: Invalid table name $tablename, please use alphanums only\n";
+        warn "fsql: Invalid table name $tablename, ".
+            "please use letter+alphanums only\n";
         exit 99;
     }
     if (exists $Tables{$tablename}) {
@@ -104,8 +105,6 @@ sub _add_csv {
 }
 
 sub _add_tsv {
-    # XXX
-
     my $arg = shift;
     my ($filename, $fh, $tablename) = _check_add_arg($arg);
 
@@ -225,16 +224,29 @@ sub _add_yaml {
     _res_to_csv($res, $filename, $tablename, 'yaml');
 }
 
+sub _add_perl {
+    my $arg = shift;
+    my ($filename, $fh, $tablename) = _check_add_arg($arg);
+
+    my $res;
+    {
+        local $/;
+        my $content = <$fh>;
+        $res = eval $content;
+        die if $@;
+    }
+    _res_to_csv($res, $filename, $tablename, 'perl');
+}
+
 sub parse_cmdline {
     my $res = GetOptions(
-        'format'         => \$Opts{format},
-        'json'           => sub { $Opts{format} = 'json' },
-        'yaml'           => sub { $Opts{format} = 'yaml' },
+        'format|f=s'     => \$Opts{format},
         'add-csv=s'      => sub { _add_csv($_[1]) },
         'add-tsv=s'      => sub { _add_tsv($_[1]) },
         'add-ltsv=s'     => sub { _add_ltsv($_[1]) },
         'add-json=s'     => sub { _add_json($_[1]) },
         'add-yaml=s'     => sub { _add_yaml($_[1]) },
+        'add-perl=s'     => sub { _add_perl($_[1]) },
         'show-schema'    => sub { $Opts{action} = 'show-schema' },
         'help|h'           => sub {
             print <<USAGE;
@@ -248,7 +260,8 @@ Options:
   --add-ltsv=s
   --add-json=s
   --add-yaml=s
-  --format=s, --json, --yaml
+  --add-perl=s
+  --format=s, -f
 For more details, see the manpage/documentation.
 USAGE
             exit 0;
@@ -263,6 +276,14 @@ USAGE
     unless (keys %Tables) {
         _add_json("-");
     }
+
+    # pick default format from the most used input format
+    unless ($Opts{format}) {
+        my %fmts;
+        $fmts{$Tables{$_}{fmt}}++ for keys %Tables;
+        my @fmts = sort {$fmts{$b} <=> $fmts{$a} || $a cmp $b} keys %fmts;
+        $Opts{format} = $fmts[0];
+    }
 }
 
 sub run {
@@ -270,6 +291,7 @@ sub run {
     require Perinci::Result::Format;
 
     my $res;
+
     if ($Opts{action} eq 'show-schema') {
 
         if (@ARGV) {
@@ -286,6 +308,7 @@ sub run {
             $Tables{$t}{columns} = [split /,/, $line1];
         }
         $res = [200, "OK", {tables => \%Tables}];
+	$Opts{format} = 'text' if $Opts{format} =~ /^(c|t|lt)sv$/;
 
     } elsif ($Opts{action} eq 'query') {
         unless (@ARGV) {
@@ -323,7 +346,27 @@ sub run {
 
     }
 
-    print Perinci::Result::Format::format($res, $Opts{format});
+    show_result($res);
+}
+
+sub show_result {
+    my $res = shift;
+
+    if ($Opts{format} =~ /^[ct]sv$/) {
+        csv(in => $res->[2], out => *STDOUT,
+	    sep_char => $Opts{format} eq 'tsv' ? "\t" : ',');
+    } elsif ($Opts{format} eq 'ltsv') {
+        # Text::LTSV expects a format of [[k=>v, k2=>v2, ...], ...]. we might as
+        # well print it ourselves.
+        for my $row (@{ $res->[2] }) {
+            say join("\t", map {"$_:$row->{$_}"} sort keys %$row);
+        }
+    } elsif ($Opts{format} eq 'perl') {
+        require Data::Format::Pretty::Perl;
+        print Data::Format::Pretty::Perl::format_pretty($res->[2]);
+    } else {
+        print Perinci::Result::Format::format($res, $Opts{format});
+    }
 }
 
 # MAIN
@@ -347,7 +390,7 @@ fsql - Perform SQL queries against files in CSV/TSV/LTSV/JSON/YAML formats
 
 =head1 VERSION
 
-version 0.04
+This document describes version 0.05 of module fsql (in distribution App-fsql), released on 2014-04-29.
 
 =head1 SYNOPSIS
 
@@ -398,18 +441,25 @@ L<Perinci::CmdLine>-based programs.
 
 Like C<--add-json>, but will load file as YAML.
 
-=item * --format=FORMAT (default: text)
+=item * --add-perl=FILENAME[:TABLENAME]
 
-Set output format. This will be passed to L<Perinci::Result::Format>'s
-C<format()>.
+Like C<--add-perl>, but will load file as Perl.
 
-=item * --json
+=item * --format=FORMAT (default: text), -f
 
-Equivalent to C<--format json>.
+Set output format.
 
-=item * --yaml
+The value C<csv> or C<tsv> or C<ltsv> will cause query results to be output as a
+comma-separated or TAB-separated list or labeled-TAB separated list,
+respectively. As this isn't very useful for a schema listing, these values will
+be silently converted to C<text> if C<--show-schema> is also present.
 
-Equivalent to C<--format yaml>.
+The value of C<perl> will format using L<Data::Format::Pretty::Perl>.
+
+Any other value will be passed to L<Perinci::Result::Format>'s C<format()>.
+
+The default value is the most used table format. So if your tables are mostly
+CSV, B<fsql> will also output CSV by default.
 
 =item * --show-schema
 

@@ -19,6 +19,7 @@ name: App-fsql
 requires:
   DBD::CSV: '0'
   DBI: '0'
+  Data::Format::Pretty::Perl: '0'
   JSON: '0'
   Perinci::Result::Format: '0'
   Perinci::Result::Util: '0'
@@ -30,7 +31,7 @@ resources:
   bugtracker: https://rt.cpan.org/Public/Dist/Display.html?Name=App-fsql
   homepage: https://metacpan.org/release/App-fsql
   repository: git://github.com/sharyanto/perl-App-fsql.git
-version: '0.04'
+version: '0.05'
 x_Dist_Zilla:
   perl:
     version: '5.018002'

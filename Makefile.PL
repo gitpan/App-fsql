@@ -25,6 +25,7 @@ my %WriteMakefileArgs = (
   "PREREQ_PM" => {
     "DBD::CSV" => 0,
     "DBI" => 0,
+    "Data::Format::Pretty::Perl" => 0,
     "JSON" => 0,
     "Perinci::Result::Format" => 0,
     "Perinci::Result::Util" => 0,
@@ -38,7 +39,7 @@ my %WriteMakefileArgs = (
     "IPC::Open3" => 0,
     "Test::More" => 0
   },
-  "VERSION" => "0.04",
+  "VERSION" => "0.05",
   "test" => {
     "TESTS" => "t/*.t"
   }
@@ -48,6 +49,7 @@ my %WriteMakefileArgs = (
 my %FallbackPrereqs = (
   "DBD::CSV" => 0,
   "DBI" => 0,
+  "Data::Format::Pretty::Perl" => 0,
   "File::Spec" => 0,
   "IO::Handle" => 0,
   "IPC::Open3" => 0,

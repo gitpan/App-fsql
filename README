@@ -3,7 +3,8 @@ NAME
     formats
 
 VERSION
-    version 0.04
+    This document describes version 0.05 of module App::fsql (in
+    distribution App-fsql), released on 2014-04-29.
 
 SYNOPSIS
     See the command-line script fsql.
