@@ -3,7 +3,7 @@ NAME
     formats
 
 VERSION
-    This document describes version 0.05 of module App::fsql (in
+    This document describes version 0.06 of App::fsql (from Perl
     distribution App-fsql), released on 2014-04-29.
 
 SYNOPSIS
