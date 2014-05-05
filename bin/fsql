@@ -8,8 +8,8 @@ use warnings;
 use Getopt::Long;
 use Text::CSV_XS qw(csv);
 
-our $VERSION = '0.08'; # VERSION
-our $DATE = '2014-04-29'; # DATE
+our $VERSION = '0.09'; # VERSION
+our $DATE = '2014-05-05'; # DATE
 
 my %Opts = (
     format => undef,
@@ -485,7 +485,7 @@ fsql - Perform SQL queries against files in CSV/TSV/LTSV/JSON/YAML formats
 
 =head1 VERSION
 
-This document describes version 0.08 of fsql (from Perl distribution App-fsql), released on 2014-04-29.
+This document describes version 0.09 of fsql (from Perl distribution App-fsql), released on 2014-05-05.
 
 =head1 SYNOPSIS
 
@@ -505,12 +505,12 @@ assumed in STDIN with name C<stdin>.
 
 Filter CSV (table from stdin is aptly named so):
 
- % prog-that-produces-csv | fsql 'SELECT id,name FROM stdin WHERE id<=1000' > final.csv
+ % prog-that-produces-csv | fsql 'SELECT id,name FROM stdin WHERE id <= 1000' > final.csv
 
 Pick output format, produce array of hashes instead of the default array of
 arrays:
 
- % fsql -a ~/book.pl 'SELECT title,name FROM book WHERE year>=2010' --aoh -f json
+ % fsql -a ~/book.pl 'SELECT title,name FROM book WHERE year >= 2010' --aoh -f json
 
 You can perform joins, of course:
 
@@ -527,9 +527,11 @@ Show schema:
 =item * --add=FILENAME[:TABLENAME], -a
 
 Add a table from a file. Type will be detected from filename extension (and some
-heuristics, if unspecified). Die if type cannot be detected.
+heuristics, if there is no file extension or extension is unrecognized). Die if
+type cannot be detected.
 
-Alternatively, you can use one of the C<--add-TYPE> options to add
+Sometimes the detection will miss. Alternatively, you can use one of the
+C<--add-TYPE> options to add a specific table type.
 
 =item * --add-csv=FILENAME[:TABLENAME]
 
@@ -563,7 +565,7 @@ Like C<--add-json>, but will load file as YAML.
 
 =item * --add-perl=FILENAME[:TABLENAME]
 
-Like C<--add-perl>, but will load file as Perl.
+Like C<--add-json>, but will load file as Perl.
 
 =item * --aoa
 
