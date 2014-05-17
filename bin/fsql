@@ -8,8 +8,8 @@ use warnings;
 use Getopt::Long;
 use Text::CSV_XS qw(csv);
 
-our $VERSION = '0.09'; # VERSION
-our $DATE = '2014-05-05'; # DATE
+our $VERSION = '0.10'; # VERSION
+our $DATE = '2014-05-17'; # DATE
 
 my %Opts = (
     format => undef,
@@ -485,7 +485,7 @@ fsql - Perform SQL queries against files in CSV/TSV/LTSV/JSON/YAML formats
 
 =head1 VERSION
 
-This document describes version 0.09 of fsql (from Perl distribution App-fsql), released on 2014-05-05.
+This document describes version 0.10 of fsql (from Perl distribution App-fsql), released on 2014-05-17.
 
 =head1 SYNOPSIS
 
