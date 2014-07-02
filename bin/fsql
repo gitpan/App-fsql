@@ -1,4 +1,4 @@
-#!/usr/bin/env perl
+#!perl
 
 use 5.010001;
 use strict;
@@ -8,8 +8,8 @@ use warnings;
 use Getopt::Long;
 use Text::CSV_XS qw(csv);
 
-our $VERSION = '0.10'; # VERSION
-our $DATE = '2014-05-17'; # DATE
+our $VERSION = '0.11'; # VERSION
+our $DATE = '2014-07-02'; # DATE
 
 my %Opts = (
     format => undef,
@@ -485,7 +485,7 @@ fsql - Perform SQL queries against files in CSV/TSV/LTSV/JSON/YAML formats
 
 =head1 VERSION
 
-This document describes version 0.10 of fsql (from Perl distribution App-fsql), released on 2014-05-17.
+This document describes version 0.11 of fsql (from Perl distribution App-fsql), released on 2014-07-02.
 
 =head1 SYNOPSIS
 

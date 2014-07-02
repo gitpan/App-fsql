@@ -1,7 +1,7 @@
 package App::fsql;
 
-our $VERSION = '0.10'; # VERSION
-our $DATE = '2014-05-17'; # DATE
+our $VERSION = '0.11'; # VERSION
+our $DATE = '2014-07-02'; # DATE
 
 1;
 # ABSTRACT: Perform SQL queries against files in CSV/TSV/LTSV/JSON/YAML formats
@@ -18,7 +18,7 @@ App::fsql - Perform SQL queries against files in CSV/TSV/LTSV/JSON/YAML formats
 
 =head1 VERSION
 
-This document describes version 0.10 of App::fsql (from Perl distribution App-fsql), released on 2014-05-17.
+This document describes version 0.11 of App::fsql (from Perl distribution App-fsql), released on 2014-07-02.
 
 =head1 SYNOPSIS
 
