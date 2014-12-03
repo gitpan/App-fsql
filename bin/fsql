@@ -8,8 +8,8 @@ use warnings;
 use Getopt::Long;
 use Text::CSV_XS qw(csv);
 
-our $VERSION = '0.11'; # VERSION
-our $DATE = '2014-07-02'; # DATE
+our $VERSION = '0.12'; # VERSION
+our $DATE = '2014-12-03'; # DATE
 
 my %Opts = (
     format => undef,
@@ -168,6 +168,7 @@ sub _add {
         seek $arginfo->{fh}, 0, 0;
     }
 
+    $type //= "";
     if ($type eq 'csv') {
         _add_csv($arg, $arginfo);
     } elsif ($type eq 'tsv') {
@@ -315,15 +316,15 @@ sub parse_cmdline {
         'add-json=s'     => sub { _add_json($_[1]) },
         'add-yaml=s'     => sub { _add_yaml($_[1]) },
         'add-perl=s'     => sub { _add_perl($_[1]) },
-        'show-schema'    => sub { $Opts{action} = 'show-schema' },
+        'show-schema|s'  => sub { $Opts{action} = 'show-schema' },
         'aoh'            => sub { $Opts{hash} = 1 },
         'aoa'            => sub { $Opts{hash} = 0 },
         'help|h'         => sub {
             print <<USAGE;
 Usage:
-  fsql [OPTIONS]... [ <QUERY> | --show-schema ]
-  fsql --help
-  fsql --version
+  fsql [OPTIONS]... [ <QUERY> | --show-schema|-s ]
+  fsql --help|h
+  fsql --version|-v
 Options:
   --add=s
   --add-csv=s
@@ -485,7 +486,7 @@ fsql - Perform SQL queries against files in CSV/TSV/LTSV/JSON/YAML formats
 
 =head1 VERSION
 
-This document describes version 0.11 of fsql (from Perl distribution App-fsql), released on 2014-07-02.
+This document describes version 0.12 of fsql (from Perl distribution App-fsql), released on 2014-12-03.
 
 =head1 SYNOPSIS
 
@@ -623,7 +624,7 @@ Please visit the project's homepage at L<https://metacpan.org/release/App-fsql>.
 
 =head1 SOURCE
 
-Source repository is at L<https://github.com/sharyanto/perl-App-fsql>.
+Source repository is at L<https://github.com/perlancar/perl-App-fsql>.
 
 =head1 BUGS
 
@@ -635,11 +636,11 @@ feature.
 
 =head1 AUTHOR
 
-Steven Haryanto <stevenharyanto@gmail.com>
+perlancar <perlancar@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2014 by Steven Haryanto.
+This software is copyright (c) 2014 by perlancar@cpan.org.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

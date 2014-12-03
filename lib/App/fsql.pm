@@ -1,7 +1,7 @@
 package App::fsql;
 
-our $VERSION = '0.11'; # VERSION
-our $DATE = '2014-07-02'; # DATE
+our $VERSION = '0.12'; # VERSION
+our $DATE = '2014-12-03'; # DATE
 
 1;
 # ABSTRACT: Perform SQL queries against files in CSV/TSV/LTSV/JSON/YAML formats
@@ -18,7 +18,7 @@ App::fsql - Perform SQL queries against files in CSV/TSV/LTSV/JSON/YAML formats
 
 =head1 VERSION
 
-This document describes version 0.11 of App::fsql (from Perl distribution App-fsql), released on 2014-07-02.
+This document describes version 0.12 of App::fsql (from Perl distribution App-fsql), released on 2014-12-03.
 
 =head1 SYNOPSIS
 
@@ -30,7 +30,7 @@ Please visit the project's homepage at L<https://metacpan.org/release/App-fsql>.
 
 =head1 SOURCE
 
-Source repository is at L<https://github.com/sharyanto/perl-App-fsql>.
+Source repository is at L<https://github.com/perlancar/perl-App-fsql>.
 
 =head1 BUGS
 
@@ -42,11 +42,11 @@ feature.
 
 =head1 AUTHOR
 
-Steven Haryanto <stevenharyanto@gmail.com>
+perlancar <perlancar@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2014 by Steven Haryanto.
+This software is copyright (c) 2014 by perlancar@cpan.org.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
