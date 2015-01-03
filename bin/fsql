@@ -8,8 +8,8 @@ use warnings;
 use Getopt::Long;
 use Text::CSV_XS qw(csv);
 
-our $VERSION = '0.12'; # VERSION
-our $DATE = '2014-12-03'; # DATE
+our $VERSION = '0.13'; # VERSION
+our $DATE = '2015-01-03'; # DATE
 
 my %Opts = (
     format => undef,
@@ -486,11 +486,11 @@ fsql - Perform SQL queries against files in CSV/TSV/LTSV/JSON/YAML formats
 
 =head1 VERSION
 
-This document describes version 0.12 of fsql (from Perl distribution App-fsql), released on 2014-12-03.
+This document describes version 0.13 of fsql (from Perl distribution App-fsql), released on 2015-01-03.
 
 =head1 SYNOPSIS
 
- fsql [OPTIONS] [ <QUERY> | --show-schema ]
+ fsql [OPTIONS] [ <QUERY> | --show-schema|-s ]
 
 =head1 DESCRIPTION
 
@@ -519,7 +519,7 @@ You can perform joins, of course:
 
 Show schema:
 
- % fsql -a table1.json -a 2.csv:table2 --show-schema
+ % fsql -a table1.json -a 2.csv:table2 -s
 
 =head1 OPTIONS
 
@@ -590,7 +590,7 @@ Set output format.
 The value C<csv> or C<tsv> or C<ltsv> will cause query results to be output as a
 comma-separated or TAB-separated list or labeled-TAB separated list,
 respectively. As this isn't very useful for a schema listing, these values will
-be silently converted to C<text> if C<--show-schema> is also present.
+be silently converted to C<text> if C<--show-schema> (C<-s>) is also present.
 
 The other values C<perl>, C<json>, C<yaml>, and C<text> will be formatted using
 appropriate L<Data::Format::Pretty> formatter.
@@ -598,7 +598,7 @@ appropriate L<Data::Format::Pretty> formatter.
 The default value is the most used table format. So if your tables are mostly
 CSV, B<fsql> will also output CSV by default.
 
-=item * --show-schema
+=item * --show-schema, -s
 
 Instead of running a query, show schema instead. This is useful for debugging.
 
@@ -614,17 +614,13 @@ Instead of running a query, show schema instead. This is useful for debugging.
 
 =head1 FAQ
 
-=head1 TODO
-
-Allow customized CSV separator and quoting.
-
 =head1 HOMEPAGE
 
 Please visit the project's homepage at L<https://metacpan.org/release/App-fsql>.
 
 =head1 SOURCE
 
-Source repository is at L<https://github.com/perlancar/perl-App-fsql>.
+Source repository is at L<https://github.com/sharyanto/perl-App-fsql>.
 
 =head1 BUGS
 
@@ -640,7 +636,7 @@ perlancar <perlancar@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2014 by perlancar@cpan.org.
+This software is copyright (c) 2015 by perlancar@cpan.org.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
